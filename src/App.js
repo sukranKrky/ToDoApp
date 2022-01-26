@@ -1,23 +1,30 @@
-import { useState } from "react";
-import { IoClose } from "react-icons/io5";
-import { connect } from "react-redux";
-import "./App.css";
-import { addTask, deleteTask, deleteAllTasks } from "./redux/actions/tasks";
+import { useState } from 'react'
+import { IoClose } from 'react-icons/io5'
+import { connect } from 'react-redux'
+import './App.css'
+import {
+  addTask,
+  deleteTask,
+  deleteAllTasks,
+  activeUpdate,
+} from './redux/actions/tasks'
 
 const App = (props) => {
-  const { tasks, addTask, deleteTask, deleteAllTasks } = props;
-  const [active, setActive] = useState(null);
+  const { tasks, addTask, deleteTask, deleteAllTasks, activeUpdate } = props
+  const [active, setActive] = useState(null)
 
   const saveTask = (e) => {
-    e.preventDefault();
-    const task = document.getElementsByName("task")[0].value;
-    const active = document.getElementsByName("active")[0].checked;
-    const teskInput = document.getElementById("teskInput");
+    e.preventDefault()
+    const task = document.getElementsByName('task')[0].value
+    const active = document.getElementsByName('active')[0].checked
+    const teskInput = document.getElementById('teskInput')
+    if (!task && task.length < 1) return
 
-    var id = Math.round(Math.random() * 10000000);
-    addTask(id, task, active);
-    teskInput.value = "";
-  };
+    const id = Math.round(Math.random() * 10000000)
+    addTask(id, task, active)
+    teskInput.value = ''
+  }
+
   return (
     <div className="container">
       <div className="cont-2">
@@ -46,6 +53,11 @@ const App = (props) => {
                     <input
                       type="checkbox"
                       name="check"
+                      onClick={() => {
+                        console.log(tasks)
+                        console.log('id=' + task.id + 'active=' + task.active)
+                        activeUpdate(task.id, task.active)
+                      }}
                       defaultChecked={task.active}
                     />
                     <label htmlFor="check">{task.task} </label>
@@ -54,7 +66,7 @@ const App = (props) => {
                       <IoClose className="icon" />
                     </button>
                   </div>
-                );
+                )
               })}
         </div>
 
@@ -79,18 +91,19 @@ const App = (props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const mapStateToProps = ({ tasks }) => {
   return {
     tasks: tasks.tasks,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = {
   addTask,
   deleteTask,
   deleteAllTasks,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+  activeUpdate,
+}
+export default connect(mapStateToProps, mapDispatchToProps)(App)

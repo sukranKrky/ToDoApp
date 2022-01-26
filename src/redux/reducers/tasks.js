@@ -1,39 +1,13 @@
-import { ADD_TASK, DELETE_ALL_TASKS, DELETE_TASK } from "../constants/taks";
+import {
+  ADD_TASK,
+  DELETE_ALL_TASKS,
+  DELETE_TASK,
+  ACTIVE_UPDATE,
+} from '../constants/taks'
 
 const initialState = {
-  tasks: [
-    {
-      id: 1,
-      active: true,
-      task: "Görev 1 ",
-    },
-    {
-      id: 2,
-      active: false,
-      task: "Görev 2 ",
-    },
-    {
-      id: 3,
-      active: true,
-      task: "Görev 3 ",
-    },
-    {
-      id: 4,
-      active: true,
-      task: "Görev 4 ",
-    },
-    {
-      id: 5,
-      active: false,
-      task: "Görev 5 ",
-    },
-    {
-      id: 6,
-      active: true,
-      task: "Görev 6 ",
-    },
-  ],
-};
+  tasks: [],
+}
 
 const tasks = (state = initialState, action) => {
   switch (action.type) {
@@ -49,23 +23,39 @@ const tasks = (state = initialState, action) => {
             active: action.active,
           },
         ],
-      };
+      }
 
     case DELETE_TASK:
       return {
         ...state,
 
         tasks: state.tasks.filter((tasks) => tasks.id !== action.id),
-      };
+      }
     case DELETE_ALL_TASKS:
       return {
         ...state,
         tasks: [],
-      };
+      }
+    case ACTIVE_UPDATE:
+      return {
+        ...state,
+
+        tasks: [
+          ...state.tasks.map((task) => {
+            if (task.id !== action.id) {
+              return task
+            }
+            return {
+              ...task,
+              active: !task.active,
+            }
+          }),
+        ],
+      }
 
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default tasks;
+export default tasks
